@@ -1,80 +1,88 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'answer_btn.dart';
 import 'question.dart';
 
 main() => runApp(QuizApp());
 
-class QuizAppState extends State <QuizApp> {
+class _QuizAppState extends State<QuizApp> {
+  int _current = 0;
+  bool hasNextQuestion() => (_current < _quizes.length);
 
-  var current = 0;
-  bool hasNextQuestion () => (current < _quizes.length);
-
-  final List <Map<String, Object>> _quizes =[
+  final List<Map<String, Object>> _quizes = [
     {
-        "question": Question('What\'s your favorite color?'),
-        "possibleAnswers": []
-    }, 
+      'question': Question('What\'s your favorite color?'),
+      "answers": ['Red', 'Blue', 'Yellow', 'Black', 'White']
+    },
     {
-        "question": Question('What\'s your favorite animal?'),
-        "possibleAnswers": []
-    }, 
+      'question': Question('What\'s your favorite animal?'),
+      "answers": ['Snake', 'Elephant', 'Eagle', 'Lion', 'Spider']
+    },
     {
-        "question": Question('What\'s your favorite food?'),
-        "possibleAnswers": []
-    }, 
+      'question': Question('What\'s your favorite food?'),
+      "answers": ['Pizza', 'HotDog', 'Sandwich', 'French Fries', 'Bacon']
+    },
     {
-        "question": Question('What\'s your favorite drink?'),
-        "possibleAnswers": []
-    }, 
+      'question': Question('What\'s your favorite drink?'),
+      "answers": ['Beer', 'Soda', 'Water', 'Juice']
+    },
   ];
-  
-  
-  void responseButtonClicked () {
-    print("Question ${current + 1} answered!!!");
-    
-    setState(() {
-      current++;
-    }); 
-  } 
+
+  void _responseButtonClicked() => setState(() => _current++);
+
+  void _restartQuiz() => setState(() => _current = 0);
 
   @override
   Widget build(BuildContext context) {
-    return ( MaterialApp(
-        
-        home: Scaffold(
-          appBar: AppBar(
-            title: Text('Jar Jar Binks Quiz'),
-            centerTitle: true,
-          ),
+    List<String> answers =
+        hasNextQuestion() ? _quizes.elementAt(_current)["answers"] : null;
 
-          body: hasNextQuestion() ? Column(
-              children: [
-                _quizes[current]["question"],
-                ElevatedButton(
-                  child: Text('Answer01'),
-                  onPressed: responseButtonClicked,
-                ),
-                
-                ElevatedButton(
-                  child: Text('Answer02'),
-                  onPressed: responseButtonClicked,
-                ),
-                
-                ElevatedButton(
-                  child: Text('Answer03'),
-                  onPressed: responseButtonClicked,
-                )
-              ],
-            ) 
-            : null
-        )
-      )
-    );
+    return (MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Quiz'),
+          centerTitle: true,
+        ),
+        body: hasNextQuestion()
+            ? Column(
+                children: [
+                  _quizes[_current]['question'],
+                  ...answers.map(
+                      (text) => AnswerButton(text, _responseButtonClicked)),
+                ],
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(bottom: 250),
+                    padding: EdgeInsets.only(
+                      right: 25,
+                      left: 25,
+                      bottom: 25,
+                      top: 320,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Congratulations!!!",
+                      style: TextStyle(fontSize: 45.0),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(25),
+                    alignment: Alignment.bottomLeft,
+                    child: FloatingActionButton(
+                      onPressed: _restartQuiz,
+                      child: Icon(Icons.arrow_back),
+                    ),
+                  ),
+                ],
+              ),
+      ),
+    ));
   }
 }
 
 class QuizApp extends StatefulWidget {
-  
   @override
-  createState() => QuizAppState();
+  createState() => _QuizAppState();
 }

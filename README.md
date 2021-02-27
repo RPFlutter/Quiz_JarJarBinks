@@ -1,11 +1,9 @@
 
 # Mark 001
 <div align="center" style="padding-top: 50px; font-size: 10px">
-    <img align="center"  src="./assets/mark1_git.png">
-    <div>
-        Picture source: <a href="url">https://www.planetminecraft.com/skin/ironman-mark-1-18/</a>
-    </div>
-    
+<img align="center"  src="./assets/mark1_git.png">
+   
+Picture source: [https://www.planetminecraft.com/skin/ironman-mark-1-18/](https://www.planetminecraft.com/skin/ironman-mark-1-18/)    
 </div>
 
 <div align="left" style="padding-top: 50px;">
