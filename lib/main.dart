@@ -4,7 +4,7 @@ import 'question.dart';
 
 main() => runApp(QuizApp());
 
-class QuizAppState extends State <QuizApp>{
+class QuizAppState extends State <QuizApp> {
 
   var current = 0;
   bool hasNextQuestion () => (current < _quizes.length);

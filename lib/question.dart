@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Question extends StatelessWidget{
+class Question extends StatelessWidget {
     
   final String questionText;
   
@@ -22,4 +22,6 @@ class Question extends StatelessWidget{
       ),
     );
   }
+  
 }
+ 
