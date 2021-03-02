@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'result.dart';
 import 'answer_btn.dart';
 import 'question.dart';
 
@@ -7,6 +8,7 @@ main() => runApp(QuizApp());
 class _QuizAppState extends State<QuizApp> {
   int _current = 0;
   bool hasNextQuestion() => (_current < _quizes.length);
+  List<String> _userAnswers = [];
 
   final List<Map<String, Object>> _quizes = [
     {
@@ -27,16 +29,32 @@ class _QuizAppState extends State<QuizApp> {
     },
   ];
 
-  void _responseButtonClicked() => setState(() => _current++);
+  void _responseButtonClicked(String answer) {
+    setState(() {
+      _current++;
+      _userAnswers.add(answer);
+    });
+  }
 
-  void _restartQuiz() => setState(() => _current = 0);
+  void _restartQuiz() => setState(() {
+        _current = 0;
+        _userAnswers.clear();
+      });
 
   @override
   Widget build(BuildContext context) {
     List<String> answers =
         hasNextQuestion() ? _quizes.elementAt(_current)["answers"] : null;
 
+    List<AnswerButton> answerBtns = hasNextQuestion()
+        ? answers
+            .map((text) =>
+                AnswerButton(label: text, onClick: _responseButtonClicked))
+            .toList()
+        : null;
+
     return (MaterialApp(
+      theme: ThemeData(primarySwatch: Colors.indigo),
       home: Scaffold(
         appBar: AppBar(
           title: Text('Quiz'),
@@ -46,36 +64,16 @@ class _QuizAppState extends State<QuizApp> {
             ? Column(
                 children: [
                   _quizes[_current]['question'],
-                  ...answers.map(
-                      (text) => AnswerButton(text, _responseButtonClicked)),
+                  ...answerBtns,
                 ],
               )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(bottom: 250),
-                    padding: EdgeInsets.only(
-                      right: 25,
-                      left: 25,
-                      bottom: 25,
-                      top: 320,
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Congratulations!!!",
-                      style: TextStyle(fontSize: 45.0),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(25),
-                    alignment: Alignment.bottomLeft,
-                    child: FloatingActionButton(
-                      onPressed: _restartQuiz,
-                      child: Icon(Icons.arrow_back),
-                    ),
-                  ),
-                ],
+            : Result(_userAnswers),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButton: hasNextQuestion()
+            ? null
+            : FloatingActionButton(
+                onPressed: _restartQuiz,
+                child: Icon(Icons.arrow_back),
               ),
       ),
     ));

@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class AnswerButton extends StatelessWidget {
-  final String _btnText;
-  final void Function() _btnClicked;
+  final String label;
+  final void Function(String) onClick;
 
-  AnswerButton(this._btnText, this._btnClicked);
+  AnswerButton({
+    @required this.label,
+    @required this.onClick,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +20,9 @@ class AnswerButton extends StatelessWidget {
       child: ElevatedButton(
         autofocus: false,
         clipBehavior: Clip.none,
-        onPressed: _btnClicked,
+        onPressed: () => onClick(label),
         child: Text(
-          _btnText,
+          label,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 20,
