@@ -1,6 +1,8 @@
-import '../question.dart';
+import 'package:flutter/material.dart';
+import 'answer_btn.dart';
+import 'question.dart';
 
-class Quiz {
+class Quiz extends StatelessWidget {
   static final List<Map<String, Object>> data = [
     {
       'question': Question('What\'s your favorite color?'),
@@ -43,4 +45,41 @@ class Quiz {
       ]
     },
   ];
+  final int _current;
+  final void Function(String) _onClickAnswer;
+
+  Quiz(this._current, this._onClickAnswer);
+
+  static bool hasNextQuestion(int currentState) => currentState < data.length;
+
+  List<AnswerButton> get currentAnswers {
+    if (hasNextQuestion(_current)) {
+      List<String> answers = [];
+
+      for (Map aAnswer in data.elementAt(_current)['answers']) {
+        answers.add(aAnswer['text']);
+      }
+      List<AnswerButton> answerBtns = answers
+          .map((text) => AnswerButton(label: text, onClick: _onClickAnswer))
+          .toList();
+
+      return answerBtns;
+    }
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          child: data[_current]['question'],
+          padding: EdgeInsets.only(bottom: 50, top: 30),
+        ),
+        Column(
+          children: [...currentAnswers],
+        )
+      ],
+    );
+  }
 }
